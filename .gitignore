@@ -1,0 +1,20 @@
+.env
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Los datos de leads contienen datos de contacto: no se versionan nunca.
+data/*.csv
+data/*.xlsx
+data/*.json
+data/*.txt
+!data/.gitkeep
+informes/
+
+# Credenciales OAuth de Google. Nunca se versionan.
+credentials.json
+client_secret*.json
+token.json
+token.pickle
+*.pem

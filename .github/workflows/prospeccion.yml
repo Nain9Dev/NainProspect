@@ -1,0 +1,94 @@
+name: Prospeccion B2B
+
+on:
+  schedule:
+    # Cada dos dias a las 07:17 UTC = 09:17 en Madrid durante el horario de
+    # verano (CEST). En horario de invierno (CET) equivale a las 08:17 locales;
+    # GitHub Actions solo admite UTC, asi que no hay ajuste automatico.
+    # El minuto 17 es deliberado: la documentacion de GitHub desaconseja el
+    # minuto :00 porque la cola de eventos schedule se satura al inicio de hora.
+    # Nota: */2 se reinicia en el dia 1 de cada mes, por lo que el salto entre
+    # el dia 31 y el 1 es de un solo dia.
+    - cron: "17 7 */2 * *"
+  workflow_dispatch:
+    inputs:
+      query:
+        description: "Consulta de busqueda"
+        required: false
+        default: "empresas de logistica en Madrid"
+      limite:
+        description: "Numero maximo de leads"
+        required: false
+        default: "10"
+
+permissions:
+  contents: read
+
+jobs:
+  prospeccion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Ejecutar pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          APIFY_API_TOKEN: ${{ secrets.APIFY_API_TOKEN }}
+          APIFY_ACTOR_ID: ${{ vars.APIFY_ACTOR_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SENDER_COMPANY_NAME: ${{ vars.SENDER_COMPANY_NAME }}
+          SENDER_LEGAL_ID: ${{ vars.SENDER_LEGAL_ID }}
+          SENDER_ADDRESS: ${{ vars.SENDER_ADDRESS }}
+          SENDER_OPTOUT_EMAIL: ${{ vars.SENDER_OPTOUT_EMAIL }}
+        run: |
+          python pipeline.py \
+            --query "${{ github.event.inputs.query || 'empresas de logistica en Madrid' }}" \
+            --limite "${{ github.event.inputs.limite || '10' }}"
+
+      - name: Archivar en Google Drive
+        if: success()
+        env:
+          GDRIVE_CLIENT_ID: ${{ secrets.GDRIVE_CLIENT_ID }}
+          GDRIVE_CLIENT_SECRET: ${{ secrets.GDRIVE_CLIENT_SECRET }}
+          GDRIVE_REFRESH_TOKEN: ${{ secrets.GDRIVE_REFRESH_TOKEN }}
+          GDRIVE_FOLDER_ID: ${{ secrets.GDRIVE_FOLDER_ID }}
+        run: |
+          python subir_drive.py data/leads_enriquecidos.csv data/informe.txt
+
+      - name: Publicar resultados como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: leads-${{ github.run_number }}
+          path: |
+            data/leads_enriquecidos.csv
+            data/informe.txt
+          # Los datos de contacto no se conservan indefinidamente.
+          retention-days: 7
+          if-no-files-found: warn
+
+      - name: Avisar de fallo por Telegram
+        if: failure() && env.TELEGRAM_BOT_TOKEN != ''
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -s -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=Prospeccion B2B: la ejecucion ${{ github.run_number }} ha fallado."
