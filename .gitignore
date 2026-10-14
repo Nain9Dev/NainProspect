@@ -9,6 +9,7 @@ data/*.csv
 data/*.xlsx
 data/*.json
 data/*.txt
+data/*.html
 !data/.gitkeep
 informes/
 
@@ -18,3 +19,13 @@ client_secret*.json
 token.json
 token.pickle
 *.pem
+
+# Archivos del SO
+.DS_Store
+Thumbs.db
+
+# Frontend
+node_modules/
+dist/
+dist-ssr/
+*.tsbuildinfo
