@@ -1,9 +1,11 @@
 # NainProspect (ProspectAI) — B2B Prospecting & Compliance Gateway
 
+[![Live Demo](https://img.shields.io/badge/Demo%20Online-prospect.naindev.com-38bdf8?style=flat-square&logo=googlechrome&logoColor=white)](https://prospect.naindev.com/)
 [![Pytest Tests](https://img.shields.io/badge/Pytest-15%2F15%20Passing-emerald?style=flat-square)](specs/001-modernization-and-showcase/tasks.md)
-[![FastAPI](https://img.shields.io/badge/FastAPI-8106-blue?style=flat-square)](http://localhost:8106/docs)
-[![Vue 3](https://img.shields.io/badge/Vue%203-5377-emerald?style=flat-square)](http://localhost:5377)
+[![Vue 3](https://img.shields.io/badge/Vue%203-Vite%206-emerald?style=flat-square)](https://prospect.naindev.com/)
 [![GDPR & LSSI-CE](https://img.shields.io/badge/Compliance-LSSI--CE%20Art.%2021%20Gate-rose?style=flat-square)](docs/02-business-rules.md)
+
+**Demo Online Interactiva:** [https://prospect.naindev.com/](https://prospect.naindev.com/)
 
 **NainProspect** es una pasarela desacoplada de prospección B2B, enriquecimiento con IA y verificación determinista de conformidad legal dentro del ecosistema de servicios de [naindev.com](https://www.naindev.com).
 

@@ -29,7 +29,7 @@ defineProps<{
     <div class="status-bar">
       <div class="status-pill" :class="{ 'online': isOnline, 'offline': !isOnline }">
         <span class="dot"></span>
-        <span class="text">{{ isOnline ? 'API Conectada (:8106)' : 'API No Detectada' }}</span>
+        <span class="text">{{ isOnline ? 'API Conectada (:8106)' : 'Motor Autónomo Client-Side (0,00 €)' }}</span>
       </div>
 
       <div class="mode-tags">
@@ -38,12 +38,12 @@ defineProps<{
       </div>
 
       <a
-        href="http://localhost:8106/docs"
+        href="https://github.com/Nain9Dev/ProspectAI"
         target="_blank"
         rel="noopener"
         class="docs-link btn-secondary"
       >
-        <span>OpenAPI Docs</span>
+        <span>Docs & Código</span>
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke-width="2"/>
           <polyline points="15 3 21 3 21 9" stroke-width="2"/>
@@ -131,9 +131,9 @@ h1 {
 }
 
 .status-pill.offline {
-  background: rgba(244, 63, 94, 0.1);
-  color: #f43f5e;
-  border: 1px solid rgba(244, 63, 94, 0.3);
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
 }
 
 .dot {
