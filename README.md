@@ -11,7 +11,8 @@
 [![Ecosystem Status](https://img.shields.io/badge/status-100%25%20operational-success)](https://status.naindev.com)
 [![Engineering Handbook](https://img.shields.io/badge/paved%20road-FastAPI%20%2B%20Vue%203-blue)](https://github.com/Nain9Dev/engineering-handbook)
 [![Cost](https://img.shields.io/badge/cost-0.00_%E2%82%AC-22c55e)](https://github.com/Nain9Dev/engineering-handbook/blob/main/governance/zero-cost-philosophy.md)
-[![Pytest Tests](https://img.shields.io/badge/Pytest-15%2F15%20Passing-emerald?style=flat-square)](specs/001-modernization-and-showcase/tasks.md)
+[![Pytest Tests](https://img.shields.io/badge/Pytest-16%2F16%20Passing-emerald?style=flat-square)](specs/001-modernization-and-showcase/tasks.md)
+[![Architecture Tests](https://img.shields.io/badge/Architecture%20Tests-Clean%20Arch%20enforced-80FF00?style=flat-square&logo=checkmarx&logoColor=black)](tests/test_architecture.py)
 [![Vue 3](https://img.shields.io/badge/Vue%203-Vite%206-emerald?style=flat-square)](https://prospect.naindev.com/)
 [![GDPR & LSSI-CE](https://img.shields.io/badge/Compliance-LSSI--CE%20Art.%2021%20Gate-rose?style=flat-square)](docs/02-business-rules.md)
 
@@ -50,33 +51,46 @@ Registrado en `D:\Development\Tools\dev-ports.json`:
 | **FastAPI Backend** | Python 3.12 + Pydantic v2 | `8106` | `http://localhost:8106/docs` (Scalar) |
 | **Health Probe** | ASGI Health Endpoint | `8106` | `http://localhost:8106/health` |
 
+```mermaid
+graph TB
+    subgraph ClientLayer["Frontend Client Layer (:5377)"]
+        VueClient["ProspectAI.Client<br/><code>Vue 3 + TypeScript (Vite 6)</code><br/><i>Dark Glassmorphism SPA // prospect.naindev.com</i>"]
+    end
+
+    subgraph ServiceLayer["FastAPI Service Layer (:8106)"]
+        FastApiApp["FastAPI REST Application<br/><code>Python 3.12 + Pydantic v2</code><br/><i>ASGI Async Pipeline Router</i>"]
+        
+        subgraph IngestionSub["Data Sourcing &amp; Sanitization"]
+            Sourcing["Sourcing Engine<br/><i>Apify Google Places / Fixtures</i>"]
+            MailboxFilter["Corporate Mailbox Guard<br/><i>Filters <code>info@</code>, <code>ventas@</code> / Blocks PII</i>"]
+        end
+
+        subgraph IntelligenceSub["Classification &amp; Compliance Engine"]
+            Classifier["Claude Haiku 4.5 &amp; Heuristic Classifier<br/><i>Priority Scoring (1-5) &amp; Headcount Fit</i>"]
+            TemplateGen["Outreach Template Engine<br/><i>Sector Specialization &amp; Personalization</i>"]
+            LegalGate["LSSI-CE Art. 21 &amp; RGPD 6.1.f Gate<br/><b>FAIL-CLOSED: Hard-blocked Outbound Send</b>"]
+        end
+    end
+
+    VueClient -->|"HTTP / REST API (Proxy :5377/api)"| FastApiApp
+    FastApiApp --> Sourcing
+    Sourcing --> MailboxFilter
+    MailboxFilter --> Classifier
+    Classifier --> TemplateGen
+    TemplateGen --> LegalGate
+    LegalGate -.->|"Preview &amp; Audit Logs Only"| VueClient
+
+    classDef client fill:#0047AB,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef gateway fill:#002B66,stroke:#80FF00,stroke-width:2px,color:#FFFFFF;
+    classDef comp fill:#060D1A,stroke:#38BDF8,stroke-width:2px,color:#FFFFFF;
+    classDef gate fill:#4C0519,stroke:#FB7185,stroke-width:2px,color:#FFFFFF;
+
+    class VueClient client;
+    class FastApiApp,Sourcing,MailboxFilter gateway;
+    class Classifier,TemplateGen comp;
+    class LegalGate gate;
 ```
-+-------------------------------------------------------------+
-|              ProspectAI.Client (Vue 3 + TS)                |
-|        Puerto 5377 - Dark Glassmorphism SPA                |
-+------------------------------+------------------------------+
-                               | HTTP / JSON (Proxy :5377/api)
-                               v
-+-------------------------------------------------------------+
-|               FastAPI Service (src/nainprospect)            |
-|                   Puerto 8106 - Python 3.12                 |
-|  +--------------------+   +-------------------------------+ |
-|  | Pipeline REST API  |   | Template & Compliance API     | |
-|  +---------+----------+   +---------------+---------------+ |
-|            |                              |                 |
-|            v                              v                 |
-|  +--------------------+   +-------------------------------+ |
-|  | Sourcing Engine    |   | Claude Haiku 4.5 / Heuristica | |
-|  | (Apify / Fixtures) |   | Clasificador de Prioridad     | |
-|  +---------+----------+   +---------------+---------------+ |
-|            |                              |                 |
-|            v                              v                 |
-|  +--------------------+   +-------------------------------+ |
-|  | Filtro de Buzon    |   | Pie Legal Determinista        | |
-|  | Rol Corporativo    |   | LSSI-CE 21 & RGPD 6.1.f       | |
-|  +--------------------+   +-------------------------------+ |
-+-------------------------------------------------------------+
-```
+
 
 ---
 
