@@ -1,6 +1,16 @@
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/assets/banner-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/assets/banner-light.svg">
+  <img alt="NainProspect Architectural Blueprint" src="docs/assets/banner-dark.svg" width="100%">
+</picture>
+
 # NainProspect (ProspectAI) — B2B Prospecting & Compliance Gateway
 
-[![Live Demo](https://img.shields.io/badge/Demo%20Online-prospect.naindev.com-38bdf8?style=flat-square&logo=googlechrome&logoColor=white)](https://prospect.naindev.com/)
+[![ci](https://github.com/Nain9Dev/ProspectAI/actions/workflows/ci.yml/badge.svg)](https://github.com/Nain9Dev/ProspectAI/actions/workflows/ci.yml)
+[![Demo Online](https://img.shields.io/badge/demo-online-blueviolet?style=flat&logo=githubpages&logoColor=white)](https://prospect.naindev.com/)
+[![Ecosystem Status](https://img.shields.io/badge/status-100%25%20operational-success)](https://status.naindev.com)
+[![Engineering Handbook](https://img.shields.io/badge/paved%20road-FastAPI%20%2B%20Vue%203-blue)](https://github.com/Nain9Dev/engineering-handbook)
+[![Cost](https://img.shields.io/badge/cost-0.00_%E2%82%AC-22c55e)](https://github.com/Nain9Dev/engineering-handbook/blob/main/governance/zero-cost-philosophy.md)
 [![Pytest Tests](https://img.shields.io/badge/Pytest-15%2F15%20Passing-emerald?style=flat-square)](specs/001-modernization-and-showcase/tasks.md)
 [![Vue 3](https://img.shields.io/badge/Vue%203-Vite%206-emerald?style=flat-square)](https://prospect.naindev.com/)
 [![GDPR & LSSI-CE](https://img.shields.io/badge/Compliance-LSSI--CE%20Art.%2021%20Gate-rose?style=flat-square)](docs/02-business-rules.md)
