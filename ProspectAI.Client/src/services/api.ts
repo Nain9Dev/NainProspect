@@ -15,6 +15,14 @@ import {
 const API_BASE = '/api'
 let useMock = false
 
+function emitTelemetry(type: string, name: string, latencyMs: number, status: number, payload: unknown) {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('nain:telemetry', {
+      detail: { type, name, latencyMs, status, payload }
+    }));
+  }
+}
+
 export async function checkHealth(): Promise<boolean> {
   try {
     const res = await fetch('/health', { signal: AbortSignal.timeout(2000) })
@@ -50,25 +58,42 @@ export async function runPipeline(
   forceSimulation: boolean = true,
   notificar: boolean = false,
 ): Promise<PipelineRunResponse> {
-  if (useMock) return runMockPipeline(query, limite, forceSimulation, notificar)
-  try {
-    const res = await fetch(`${API_BASE}/pipeline/run`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query,
-        limite,
-        force_simulation: forceSimulation,
-        notificar,
-      }),
-      signal: AbortSignal.timeout(5000),
-    })
-    if (!res.ok) throw new Error(`Fallo en la ejecucion del pipeline (${res.status})`)
-    return await res.json()
-  } catch {
-    useMock = true
-    return runMockPipeline(query, limite, forceSimulation, notificar)
+  const started = performance.now()
+  let result: PipelineRunResponse
+  if (useMock) {
+    result = await runMockPipeline(query, limite, forceSimulation, notificar)
+  } else {
+    try {
+      const res = await fetch(`${API_BASE}/pipeline/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query,
+          limite,
+          force_simulation: forceSimulation,
+          notificar,
+        }),
+        signal: AbortSignal.timeout(5000),
+      })
+      if (!res.ok) throw new Error(`Fallo en la ejecucion del pipeline (${res.status})`)
+      result = await res.json()
+    } catch {
+      useMock = true
+      result = await runMockPipeline(query, limite, forceSimulation, notificar)
+    }
   }
+
+  const duration = Math.round(performance.now() - started)
+  emitTelemetry('Compliance', 'RunProspectingPipeline', duration, 200, {
+    query,
+    limit: limite,
+    forceSimulation,
+    lssiGateActive: true,
+    totalProcessed: result.total_procesados,
+    runtime: useMock ? 'InBrowserMockPipeline' : 'FastApiBackend'
+  })
+
+  return result
 }
 
 export async function fetchLeads(
