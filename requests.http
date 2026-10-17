@@ -1,0 +1,36 @@
+### NainProspect - REST API Requests
+@host = http://localhost:8000
+@api = {{host}}/api/v1
+
+### 1. Health Check
+GET {{host}}/health HTTP/1.1
+Accept: application/json
+
+### 2. System Configuration
+GET {{api}}/config HTTP/1.1
+Accept: application/json
+
+### 3. List Extracted Leads
+GET {{api}}/pipeline/leads HTTP/1.1
+Accept: application/json
+
+### 4. Trigger Prospecting Pipeline Run
+POST {{api}}/pipeline/run HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "target_sector": "manufacturing",
+  "max_leads": 10
+}
+
+### 5. Preview Compliance Outreach Template
+POST {{api}}/templates/preview HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "company_name": "Acme S.L.",
+  "recipient_email": "contacto@acme.com",
+  "sector": "metal"
+}

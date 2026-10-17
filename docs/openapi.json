@@ -1,0 +1,866 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "NainProspect \u2014 B2B Prospecting & Compliance Gateway",
+    "description": "Autonomous B2B prospect sourcing, AI enrichment, and compliance verification engine. Enforces GDPR Article 6.1.f and Spanish LSSI-CE Article 21 compliance gates.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/config": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Get System Config",
+        "description": "Retrieve system operating mode, active legal constraints, and configuration.",
+        "operationId": "get_system_config_api_config_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemConfigResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pipeline/run": {
+      "post": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Trigger Pipeline Run",
+        "description": "Execute a prospecting run: fetch/generate leads, classify with AI, and score.",
+        "operationId": "trigger_pipeline_run_api_pipeline_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PipelineRunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PipelineRunResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pipeline/runs": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Get Pipeline Runs",
+        "description": "Retrieve all recorded pipeline executions.",
+        "operationId": "get_pipeline_runs_api_pipeline_runs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PipelineRunResponse"
+                  },
+                  "type": "array",
+                  "title": "Response Get Pipeline Runs Api Pipeline Runs Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/leads": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Get Leads",
+        "description": "List and filter enriched leads.",
+        "operationId": "get_leads_api_leads_get",
+        "parameters": [
+          {
+            "name": "sector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by industry (e.g. logistica, tecnologia, retail)",
+              "title": "Sector"
+            },
+            "description": "Filter by industry (e.g. logistica, tecnologia, retail)"
+          },
+          {
+            "name": "min_priority",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 5,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by minimum priority score (1-5)",
+              "title": "Min Priority"
+            },
+            "description": "Filter by minimum priority score (1-5)"
+          },
+          {
+            "name": "has_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by presence of valid role-based email",
+              "title": "Has Email"
+            },
+            "description": "Filter by presence of valid role-based email"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EnrichedLead"
+                  },
+                  "title": "Response Get Leads Api Leads Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/leads/{lead_id}": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Get Single Lead",
+        "description": "Retrieve details for a specific lead.",
+        "operationId": "get_single_lead_api_leads__lead_id__get",
+        "parameters": [
+          {
+            "name": "lead_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Lead Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnrichedLead"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/templates": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "List Templates",
+        "description": "List available template sectors and target descriptions.",
+        "operationId": "list_templates_api_templates_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response List Templates Api Templates Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/templates/{sector}/preview": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Preview Template",
+        "description": "Preview rendered email template with live placeholders and legal footer.",
+        "operationId": "preview_template_api_templates__sector__preview_get",
+        "parameters": [
+          {
+            "name": "sector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sector"
+            }
+          },
+          {
+            "name": "lead_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional lead ID to populate placeholders with",
+              "title": "Lead Id"
+            },
+            "description": "Optional lead ID to populate placeholders with"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplatePreviewResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/metrics": {
+      "get": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Get Metrics",
+        "description": "Get aggregate lead pipeline metrics and statistics.",
+        "operationId": "get_metrics_api_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Metrics Api Metrics Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/compliance/verify-send": {
+      "post": {
+        "tags": [
+          "Prospecting Gateway"
+        ],
+        "summary": "Verify Outbound Dispatch",
+        "description": "Enforce the compliance send gate (BR-02). Demonstrates technical lock.",
+        "operationId": "verify_outbound_dispatch_api_compliance_verify_send_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "description": "Liveness probe returning application operational status.",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Check Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Readiness Check",
+        "description": "Readiness probe indicating service is ready to accept prospecting traffic.",
+        "operationId": "readiness_check_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Readiness Check Health Ready Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CostMetrics": {
+        "properties": {
+          "input_tokens": {
+            "type": "integer",
+            "title": "Input Tokens",
+            "default": 0
+          },
+          "output_tokens": {
+            "type": "integer",
+            "title": "Output Tokens",
+            "default": 0
+          },
+          "coste_usd": {
+            "type": "number",
+            "title": "Coste Usd",
+            "default": 0.0
+          },
+          "coste_por_lead_usd": {
+            "type": "number",
+            "title": "Coste Por Lead Usd",
+            "default": 0.0
+          },
+          "coste_100_leads_usd": {
+            "type": "number",
+            "title": "Coste 100 Leads Usd",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "title": "CostMetrics",
+        "description": "Token usage and dollar cost accounting."
+      },
+      "EnrichedLead": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "nombre": {
+            "type": "string",
+            "title": "Nombre"
+          },
+          "web": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Web",
+            "default": ""
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "telefono": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Telefono",
+            "default": ""
+          },
+          "ciudad": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ciudad",
+            "default": ""
+          },
+          "pais": {
+            "type": "string",
+            "title": "Pais",
+            "default": "ES"
+          },
+          "categoria_origen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Categoria Origen",
+            "default": ""
+          },
+          "empleados_declarados": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Empleados Declarados"
+          },
+          "fuente": {
+            "type": "string",
+            "title": "Fuente",
+            "default": "apify"
+          },
+          "industria": {
+            "type": "string",
+            "enum": [
+              "logistica",
+              "tecnologia",
+              "retail",
+              "industrial",
+              "alimentacion",
+              "otro"
+            ],
+            "title": "Industria",
+            "default": "otro"
+          },
+          "tamano_estimado": {
+            "type": "string",
+            "enum": [
+              "micro",
+              "pequena",
+              "mediana",
+              "grande",
+              "desconocido"
+            ],
+            "title": "Tamano Estimado",
+            "default": "desconocido"
+          },
+          "prioridad": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Prioridad",
+            "description": "Outreach priority from 1 (low) to 5 (high)",
+            "default": 1
+          },
+          "confianza": {
+            "type": "string",
+            "enum": [
+              "alta",
+              "media",
+              "baja"
+            ],
+            "title": "Confianza",
+            "default": "baja"
+          },
+          "motivo": {
+            "type": "string",
+            "title": "Motivo",
+            "description": "Short classification justification",
+            "default": ""
+          },
+          "estado": {
+            "type": "string",
+            "title": "Estado",
+            "description": "Status code ('ok', 'error', 'simulado')",
+            "default": "ok"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "nombre"
+        ],
+        "title": "EnrichedLead",
+        "description": "Enriched lead with AI classification and priority scoring."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "PipelineRunRequest": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 3,
+            "title": "Query",
+            "default": "empresas de logistica en Madrid"
+          },
+          "limite": {
+            "type": "integer",
+            "maximum": 50.0,
+            "minimum": 1.0,
+            "title": "Limite",
+            "description": "Maximum number of leads to fetch",
+            "default": 10
+          },
+          "force_simulation": {
+            "type": "boolean",
+            "title": "Force Simulation",
+            "description": "Force synthetic simulation mode",
+            "default": false
+          },
+          "notificar": {
+            "type": "boolean",
+            "title": "Notificar",
+            "description": "Send Telegram alert for priority leads",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "PipelineRunRequest",
+        "description": "Request payload to initiate a prospecting run."
+      },
+      "PipelineRunResponse": {
+        "properties": {
+          "run_id": {
+            "type": "string",
+            "title": "Run Id"
+          },
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode"
+          },
+          "total_leads": {
+            "type": "integer",
+            "title": "Total Leads"
+          },
+          "in_target_band": {
+            "type": "integer",
+            "title": "In Target Band"
+          },
+          "with_email": {
+            "type": "integer",
+            "title": "With Email"
+          },
+          "high_priority_count": {
+            "type": "integer",
+            "title": "High Priority Count"
+          },
+          "coste": {
+            "$ref": "#/components/schemas/CostMetrics"
+          },
+          "leads": {
+            "items": {
+              "$ref": "#/components/schemas/EnrichedLead"
+            },
+            "type": "array",
+            "title": "Leads"
+          }
+        },
+        "type": "object",
+        "required": [
+          "run_id",
+          "timestamp",
+          "query",
+          "mode",
+          "total_leads",
+          "in_target_band",
+          "with_email",
+          "high_priority_count",
+          "coste",
+          "leads"
+        ],
+        "title": "PipelineRunResponse",
+        "description": "Output summary of a prospecting execution."
+      },
+      "SystemConfigResponse": {
+        "properties": {
+          "app_name": {
+            "type": "string",
+            "title": "App Name",
+            "default": "NainProspect"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": "1.0.0"
+          },
+          "mode_description": {
+            "type": "string",
+            "title": "Mode Description"
+          },
+          "scraping_mode": {
+            "type": "string",
+            "title": "Scraping Mode"
+          },
+          "classification_mode": {
+            "type": "string",
+            "title": "Classification Mode"
+          },
+          "telegram_mode": {
+            "type": "string",
+            "title": "Telegram Mode"
+          },
+          "email_dispatch_mode": {
+            "type": "string",
+            "title": "Email Dispatch Mode",
+            "default": "SIMULADO (LSSI-CE Gate)"
+          },
+          "target_employee_band": {
+            "type": "string",
+            "title": "Target Employee Band",
+            "default": "50-500 empleados"
+          },
+          "priority_threshold": {
+            "type": "integer",
+            "title": "Priority Threshold",
+            "default": 4
+          },
+          "sender_company": {
+            "type": "string",
+            "title": "Sender Company"
+          },
+          "sender_optout": {
+            "type": "string",
+            "title": "Sender Optout"
+          }
+        },
+        "type": "object",
+        "required": [
+          "mode_description",
+          "scraping_mode",
+          "classification_mode",
+          "telegram_mode",
+          "sender_company",
+          "sender_optout"
+        ],
+        "title": "SystemConfigResponse",
+        "description": "System runtime status and active configuration."
+      },
+      "TemplatePreviewResponse": {
+        "properties": {
+          "sector": {
+            "type": "string",
+            "title": "Sector"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "recipient": {
+            "type": "string",
+            "title": "Recipient"
+          },
+          "body_html": {
+            "type": "string",
+            "title": "Body Html"
+          },
+          "legal_footer_html": {
+            "type": "string",
+            "title": "Legal Footer Html"
+          },
+          "full_html": {
+            "type": "string",
+            "title": "Full Html"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sector",
+          "description",
+          "subject",
+          "recipient",
+          "body_html",
+          "legal_footer_html",
+          "full_html"
+        ],
+        "title": "TemplatePreviewResponse",
+        "description": "Rendered email outreach preview with deterministic legal footer."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
