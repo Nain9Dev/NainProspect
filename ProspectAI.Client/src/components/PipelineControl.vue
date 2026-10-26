@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { t } from '../locales/i18n'
 
 const emit = defineEmits<{
   (e: 'execute', payload: { query: string; limit: number; simulation: boolean }): void
@@ -43,26 +44,26 @@ function handleExecute() {
         </svg>
       </div>
       <div>
-        <h3>Lanzador de Pipeline</h3>
-        <p class="panel-desc">Sourcing de empresas y clasificacion IA determinista</p>
+        <h3>{{ t('pipelineLauncher') }}</h3>
+        <p class="panel-desc">{{ t('pipelineDesc') }}</p>
       </div>
     </div>
 
     <form @submit.prevent="handleExecute" class="form">
       <div class="field-group">
-        <label for="query-input">Consulta de Busqueda (Google Places / Web)</label>
+        <label for="query-input">{{ t('searchQueryLabel') }}</label>
         <input
           id="query-input"
           v-model="query"
           type="text"
           class="input-field"
-          placeholder="Ej: empresas de logistica en Madrid"
+          :placeholder="t('searchQueryPlaceholder')"
           required
         />
       </div>
 
       <div class="presets">
-        <span class="preset-label">Consultas rapidas:</span>
+        <span class="preset-label">{{ t('quickQueries') }}</span>
         <div class="preset-chips">
           <button
             v-for="p in PRESETS"
@@ -79,11 +80,11 @@ function handleExecute() {
 
       <div class="row-fields">
         <div class="field-group limit-field">
-          <label for="limit-select">Limite de Leads</label>
+          <label for="limit-select">{{ t('maxLeadsLabel') }}</label>
           <select id="limit-select" v-model="limit" class="input-field select-field">
-            <option :value="5">5 leads (muestreo ultra rapido)</option>
-            <option :value="10">10 leads (benchmark estandar)</option>
-            <option :value="20">20 leads (lote completo)</option>
+            <option :value="5">{{ t('option5Leads') }}</option>
+            <option :value="10">{{ t('option10Leads') }}</option>
+            <option :value="20">{{ t('option20Leads') }}</option>
           </select>
         </div>
 
@@ -95,8 +96,8 @@ function handleExecute() {
               class="toggle-checkbox"
             />
             <span class="toggle-text">
-              <strong>Modo Simulacion</strong>
-              <small>Usa fixtures sinteticos sin coste de API</small>
+              <strong>{{ t('simulatedModeLabel') }}</strong>
+              <small>{{ t('simulatedModeHint') }}</small>
             </span>
           </label>
         </div>
@@ -112,7 +113,7 @@ function handleExecute() {
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" stroke-width="2"/>
         </svg>
         <span v-else class="spinner"></span>
-        <span>{{ loading ? 'Ejecutando Sourcing & IA...' : 'Ejecutar Pipeline' }}</span>
+        <span>{{ loading ? t('runningButton') : t('runButton') }}</span>
       </button>
     </form>
   </div>

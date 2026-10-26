@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { EnrichedLead } from '../types/contracts'
+import { t } from '../locales/i18n'
 
 const props = defineProps<{
   leads: EnrichedLead[]
@@ -64,30 +65,30 @@ function getPriorityBadgeClass(prio: number): string {
           v-model="search"
           type="text"
           class="search-input"
-          placeholder="Buscar por nombre, ciudad o email..."
+          :placeholder="t('searchPlaceholder')"
         />
       </div>
 
       <div class="filters">
         <select v-model="filterSector" class="filter-select">
-          <option value="todos">Todos los sectores</option>
-          <option value="logistica">Logistica</option>
-          <option value="tecnologia">Tecnologia</option>
-          <option value="retail">Retail</option>
-          <option value="industrial">Industrial</option>
-          <option value="alimentacion">Alimentacion</option>
-          <option value="otro">Otros</option>
+          <option value="todos">{{ t('allSectors') }}</option>
+          <option value="logistica">{{ t('secLogistics') }}</option>
+          <option value="tecnologia">{{ t('secTech') }}</option>
+          <option value="retail">{{ t('secRetail') }}</option>
+          <option value="industrial">{{ t('secIndustrial') }}</option>
+          <option value="alimentacion">{{ t('secFood') }}</option>
+          <option value="otro">{{ t('secOther') }}</option>
         </select>
 
         <select v-model="filterPriority" class="filter-select">
-          <option value="todos">Todas las prioridades</option>
-          <option :value="5">Solo P5 (Maxima)</option>
-          <option :value="4">P >= 4 (Prioritarios)</option>
+          <option value="todos">{{ t('allPriorities') }}</option>
+          <option :value="5">{{ t('prioMaxOnly') }}</option>
+          <option :value="4">{{ t('prioHighOnly') }}</option>
         </select>
 
         <label class="checkbox-filter">
           <input type="checkbox" v-model="filterEmailOnly" />
-          <span>Solo con email</span>
+          <span>{{ t('filterEmailOnly') }}</span>
         </label>
       </div>
     </div>
@@ -97,25 +98,25 @@ function getPriorityBadgeClass(prio: number): string {
       <table class="leads-table">
         <thead>
           <tr>
-            <th>Prioridad</th>
-            <th>Empresa</th>
-            <th>Industria</th>
-            <th>Tamano Estimado</th>
-            <th>Confianza</th>
-            <th>Email Corporativo (Rol)</th>
-            <th class="text-right">Accion</th>
+            <th>{{ t('thPriority') }}</th>
+            <th>{{ t('thCompany') }}</th>
+            <th>{{ t('thIndustry') }}</th>
+            <th>{{ t('thSize') }}</th>
+            <th>{{ t('thConfidence') }}</th>
+            <th>{{ t('thRoleEmail') }}</th>
+            <th class="text-right">{{ t('thAction') }}</th>
           </tr>
         </thead>
         <tbody>
           <tr v-if="loading">
             <td colspan="7" class="empty-state">
               <span class="spinner"></span>
-              <p>Clasificando leads con IA...</p>
+              <p>{{ t('loadingLeads') }}</p>
             </td>
           </tr>
           <tr v-else-if="filteredLeads.length === 0">
             <td colspan="7" class="empty-state">
-              <p>No se encontraron empresas con los criterios seleccionados.</p>
+              <p>{{ t('noLeadsMatch') }}</p>
             </td>
           </tr>
           <tr v-else v-for="lead in filteredLeads" :key="lead.id" class="lead-row">
@@ -138,7 +139,7 @@ function getPriorityBadgeClass(prio: number): string {
               <div class="size-box">
                 <span class="size-name">{{ lead.tamano_estimado }}</span>
                 <small v-if="lead.empleados_declarados" class="headcount-tag">
-                  {{ lead.empleados_declarados }} emp.
+                  {{ lead.empleados_declarados }} {{ t('empAbbr') }}
                 </small>
               </div>
             </td>
@@ -153,16 +154,16 @@ function getPriorityBadgeClass(prio: number): string {
               <span v-if="lead.email" class="email-text">
                 {{ lead.email }}
               </span>
-              <span v-else class="no-email">Sin buzon rol</span>
+              <span v-else class="no-email">{{ t('noRoleMailbox') }}</span>
             </td>
 
             <td class="text-right">
               <button
                 class="btn-secondary btn-sm"
                 @click="emit('preview-lead', lead)"
-                title="Previsualizar email adaptado a esta empresa"
+                :title="t('btnViewEmail')"
               >
-                <span>Ver Email</span>
+                <span>{{ t('btnViewEmail') }}</span>
                 <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor">
                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-width="2"/>
                   <circle cx="12" cy="12" r="3" stroke-width="2"/>

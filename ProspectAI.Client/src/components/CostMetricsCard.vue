@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { CostMetrics } from '../types/contracts'
+import { t } from '../locales/i18n'
 
 defineProps<{
   metrics?: CostMetrics
@@ -20,50 +21,50 @@ defineProps<{
         </svg>
       </div>
       <div>
-        <h3>Metricas & Coste Real</h3>
-        <p class="panel-desc">Consumo de tokens Haiku 4.5 y rendimiento de embudo</p>
+        <h3>{{ t('metricsTitle') }}</h3>
+        <p class="panel-desc">{{ t('metricsSubtitle') }}</p>
       </div>
     </div>
 
     <!-- Grid of Key KPIs -->
     <div class="kpi-grid">
       <div class="kpi-box">
-        <span class="kpi-title">Total Leads</span>
+        <span class="kpi-title">{{ t('totalLeads') }}</span>
         <span class="kpi-value">{{ totalLeads }}</span>
-        <span class="kpi-sub">obtenidos en lote</span>
+        <span class="kpi-sub">{{ t('obtainedBatch') }}</span>
       </div>
 
       <div class="kpi-box">
-        <span class="kpi-title">Banda 50-500</span>
+        <span class="kpi-title">{{ t('targetBand') }}</span>
         <span class="kpi-value text-cyan">{{ inTargetBand }}</span>
-        <span class="kpi-sub">tamano objetivo</span>
+        <span class="kpi-sub">{{ t('targetSize') }}</span>
       </div>
 
       <div class="kpi-box">
-        <span class="kpi-title">Email Rol</span>
+        <span class="kpi-title">{{ t('roleEmail') }}</span>
         <span class="kpi-value text-emerald">{{ withEmail }}</span>
-        <span class="kpi-sub">buzon corporativo</span>
+        <span class="kpi-sub">{{ t('corporateMailbox') }}</span>
       </div>
 
       <div class="kpi-box">
-        <span class="kpi-title">Prioridad >= 4</span>
+        <span class="kpi-title">{{ t('highPriority') }}</span>
         <span class="kpi-value text-amber">{{ highPriorityCount }}</span>
-        <span class="kpi-sub">alertables telegram</span>
+        <span class="kpi-sub">{{ t('alertableTelegram') }}</span>
       </div>
     </div>
 
     <!-- Cost Details -->
     <div class="cost-details glass-card">
       <div class="cost-row">
-        <span>Coste esta ejecucion:</span>
+        <span>{{ t('costThisRun') }}</span>
         <strong class="cost-num">${{ metrics?.coste_usd?.toFixed(6) ?? '0.000000' }} USD</strong>
       </div>
       <div class="cost-row">
-        <span>Coste / lead medio:</span>
+        <span>{{ t('costPerLead') }}</span>
         <span class="cost-num">${{ metrics?.coste_por_lead_usd?.toFixed(6) ?? '0.000000' }} USD</span>
       </div>
       <div class="cost-row highlight-row">
-        <span>Extrapolado a 100 leads:</span>
+        <span>{{ t('cost100Leads') }}</span>
         <strong class="cost-num text-cyan">${{ metrics?.coste_100_leads_usd?.toFixed(4) ?? '0.0000' }} USD</strong>
       </div>
       <div class="token-row">

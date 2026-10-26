@@ -1,20 +1,24 @@
+<script setup lang="ts">
+import { t } from '../locales/i18n'
+</script>
+
 <template>
   <div class="compliance-notice glass-card">
     <div class="notice-header">
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-width="2"/>
       </svg>
-      <h4>Garantias de Cumplimiento Legal (RGPD & LSSI-CE)</h4>
+      <h4>{{ t('complianceHeader') }}</h4>
     </div>
     <ul class="rule-list">
       <li>
-        <strong>Solo direcciones de rol:</strong> El sistema descarta automaticamente correos con nombre de persona (ej. <em>juan@...</em>) para mantenerse exclusivamente en el plano de persona juridica.
+        <strong>{{ t('complianceRule1Title') }}</strong> {{ t('complianceRule1Body') }}
       </li>
       <li>
-        <strong>Pie legal determinista:</strong> Construido en codigo segun los requisitos del art. 21 de la LSSI-CE, nunca al azar de un modelo de IA.
+        <strong>{{ t('complianceRule2Title') }}</strong> {{ t('complianceRule2Body') }}
       </li>
       <li>
-        <strong>Aislamiento de datos:</strong> La carpeta <code>data/</code> y los CSVs jamas se versionan en Git.
+        <strong>{{ t('complianceRule3Title') }}</strong> {{ t('complianceRule3Body') }}
       </li>
     </ul>
   </div>

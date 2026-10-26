@@ -6,8 +6,10 @@
 
 # NainProspect (ProspectAI) — B2B Prospecting & Compliance Gateway
 
+[![English](https://img.shields.io/badge/Language-English-blue?style=flat-square)](README.md)
+[![Español](https://img.shields.io/badge/Idioma-Espa%C3%B1ol-emerald?style=flat-square)](README.es.md)
 [![ci](https://github.com/Nain9Dev/ProspectAI/actions/workflows/ci.yml/badge.svg)](https://github.com/Nain9Dev/ProspectAI/actions/workflows/ci.yml)
-[![Demo Online](https://img.shields.io/badge/demo-online-blueviolet?style=flat&logo=githubpages&logoColor=white)](https://prospect.naindev.com/)
+[![Live Demo](https://img.shields.io/badge/demo-online-blueviolet?style=flat&logo=githubpages&logoColor=white)](https://prospect.naindev.com/)
 [![Ecosystem Status](https://img.shields.io/badge/status-100%25%20operational-success)](https://status.naindev.com)
 [![Engineering Handbook](https://img.shields.io/badge/paved%20road-FastAPI%20%2B%20Vue%203-blue)](https://github.com/Nain9Dev/engineering-handbook)
 [![Cost](https://img.shields.io/badge/cost-0.00_%E2%82%AC-22c55e)](https://github.com/Nain9Dev/engineering-handbook/blob/main/governance/zero-cost-philosophy.md)
@@ -16,37 +18,37 @@
 [![Vue 3](https://img.shields.io/badge/Vue%203-Vite%206-emerald?style=flat-square)](https://prospect.naindev.com/)
 [![GDPR & LSSI-CE](https://img.shields.io/badge/Compliance-LSSI--CE%20Art.%2021%20Gate-rose?style=flat-square)](docs/02-business-rules.md)
 
-**Demo Online Interactiva:** [https://prospect.naindev.com/](https://prospect.naindev.com/)
+**Interactive Live Demo:** [https://prospect.naindev.com/](https://prospect.naindev.com/)
 
-**NainProspect** es una pasarela desacoplada de prospección B2B, enriquecimiento con IA y verificación determinista de conformidad legal dentro del ecosistema de servicios de [naindev.com](https://www.naindev.com).
+**NainProspect** is a decoupled B2B prospecting, AI enrichment, and deterministic legal compliance gateway within the [naindev.com](https://www.naindev.com) service ecosystem.
 
-Localiza empresas desde registros públicos (Apify Google Places o generadores sintéticos), extrae buzones de rol corporativo (`info@`, `contacto@`, `ventas@`), clasifica sector, tamaño de plantilla (objetivo 50-500 empleados) y prioridad (1-5) mediante Claude Haiku 4.5, y genera plantillas de outreach con pie legal inmutable.
+It sources company data from public registries (Apify Google Places or synthetic fixtures), extracts corporate role mailboxes (`info@`, `contacto@`, `ventas@`), classifies business sector, headcount band (target 50-500 employees), and priority score (1-5) via Claude Haiku 4.5, and generates compliant outreach drafts with an immutable legal footer.
 
-> **Compuerta Legal Activa**: Por imperativo del artículo 21 de la LSSI-CE y el artículo 6.1.f del RGPD, el envío automático de correos en frío está técnicamente bloqueado en el código. El sistema se detiene en previsualización y simulación determinista.
+> **Active Safety Gate**: By mandate of Spanish LSSI-CE Article 21 and GDPR Article 6.1.f, automated cold emailing is technically blocked in the codebase. The pipeline stops deterministically at preview and audit simulation.
 
 ---
 
-## Matriz de Verificación en 60 Segundos
+## 60-Second Verification Matrix
 
 ```powershell
-# 1. Ejecutar la suite de pruebas unitarias e integracion (15/15 passed)
+# 1. Run unit, integration, and architecture test suite (16/16 passed)
 .\venv\Scripts\pytest tests/ -v
 
-# 2. Compilar el cliente frontend Vue 3 + TypeScript (strict mode, 0 errors)
+# 2. Build Vue 3 + TypeScript frontend client (strict mode, 0 errors)
 npm --prefix ProspectAI.Client run build
 
-# 3. Lanzar la prueba CLI con 10 leads y salida por consola
+# 3. Execute CLI pipeline test with 10 synthetic leads
 .\venv\Scripts\python.exe test_pipeline.py
 ```
 
 ---
 
-## Puertos y Arquitectura de Servicios
+## Ports and Service Architecture
 
-Registrado en `D:\Development\Tools\dev-ports.json`:
+Registered in `D:\Development\Tools\dev-ports.json`:
 
-| Servicio | Runtime | Puerto Local | Documentación / URL |
-| -------- | ------- | ------------ | ------------------- |
+| Service | Runtime | Local Port | Documentation / URL |
+| ------- | ------- | ---------- | -------------------- |
 | **ProspectAI.Client** | Vue 3 + TypeScript (Vite 6) | `5377` | `http://localhost:5377` |
 | **FastAPI Backend** | Python 3.12 + Pydantic v2 | `8106` | `http://localhost:8106/docs` (Scalar) |
 | **Health Probe** | ASGI Health Endpoint | `8106` | `http://localhost:8106/health` |
@@ -91,74 +93,64 @@ graph TB
     class LegalGate gate;
 ```
 
-
 ---
 
-## Ejecución Local
+## Local Execution
 
-### 1. Backend FastAPI (Puerto 8106)
+### 1. Backend FastAPI (Port 8106)
 ```powershell
 .\venv\Scripts\uvicorn src.nainprospect.main:app --port 8106 --reload
 ```
-Accede a la documentación interactiva OpenAPI en:
+Interactive OpenAPI / Scalar documentation is available at:
 `http://localhost:8106/docs`
 
-### 2. Frontend SPA (Puerto 5377)
+### 2. Frontend SPA (Port 5377)
 ```powershell
 cd ProspectAI.Client
 npm run dev
 ```
-Accede al panel interactivo de prospección en:
+Interactive prospecting dashboard is available at:
 `http://localhost:5377`
 
-### 3. Ejecución por Lotes Programada (GitHub Actions / CLI)
-El script CLI original y el workflow programado `.github/workflows/prospeccion.yml` se mantienen 100% operativos:
+### 3. Scheduled Batch Execution (CLI / GitHub Actions)
+The CLI script and scheduled workflow `.github/workflows/prospeccion.yml` remain fully operational:
 ```powershell
-python pipeline.py --query "empresas de logistica en Madrid" --limite 10
+python pipeline.py --query "logistics companies in Madrid" --limite 10
 ```
 
 ---
 
-## Garantías de Conformidad Legal (RGPD & LSSI-CE)
+## Legal Compliance Guarantees (GDPR & LSSI-CE)
 
-1. **Descarte de personas físicas**: La capa de ingesta (`compliance.py`) elimina cualquier dirección que no coincida con prefijos de rol de empresa (`info`, `contacto`, `ventas`, `soporte`, `comercial`, etc.).
-2. **Pie legal inmutable**: El pie de los correos comerciales no lo redacta la IA; se construye determinísticamente a partir de las variables societarias (`SENDER_COMPANY_NAME`, `SENDER_LEGAL_ID`, `SENDER_ADDRESS`, `SENDER_OPTOUT_EMAIL`).
-3. **Bloqueo técnico de envío**: No hay código de envío SMTP/API automático. La función `assert_outbound_send_blocked()` bloquea cualquier intento de despacho en caliente.
-4. **Protección de datos en Git**: Los CSVs y datos enriquecidos se guardan en `data/` y están excluidos del repositorio en `.gitignore`.
+1. **PII and Natural Person Mailbox Discard**: The ingestion layer (`compliance.py`) strictly eliminates any email address not matching standard corporate role prefixes (`info`, `contacto`, `ventas`, `soporte`, `comercial`, etc.).
+2. **Deterministic Legal Footer**: Outreach footers are never generated stochastically by LLMs; they are constructed deterministically in code from statutory corporate attributes (`SENDER_COMPANY_NAME`, `SENDER_LEGAL_ID`, `SENDER_ADDRESS`, `SENDER_OPTOUT_EMAIL`).
+3. **Fail-Closed Sending Barrier**: No automated SMTP or transactional API dispatch routines exist. The `assert_outbound_send_blocked()` function blocks any execution attempting outbound dispatch.
+4. **Data Isolation**: Ingested datasets and generated CSV artifacts are persisted to `data/` and excluded from source control via `.gitignore`.
 
 ---
 
-## Estructura del Proyecto
+## Repository Structure
 
 ```
 ProspectAI/
-├── AGENTS.md                          Guía técnica para desarrollo y convenciones
-├── CLAUDE.md                          Restricciones arquitecturales y compliance
-├── SECURITY.md                        Política de seguridad y aislamiento RGPD
-├── pytest.ini                         Configuración de pruebas con pythonpath
-├── requirements.txt                   Dependencias LTS de Python
-├── config.py                          Configuración central y detección de modo
-├── pipeline.py                        Orquestador CLI por lotes
-├── test_pipeline.py                   Prueba de concepto por consola (10 leads)
-├── docs/                              Documentación numerada por fases
-│   ├── 00-charter.md                  Carta del proyecto
-│   ├── 01-architecture.md             Topología y contratos
-│   ├── 02-business-rules.md           Reglas de negocio y compuertas legales
-│   ├── 03-decisions/                  Registro de decisiones arquitecturales
-│   │   ├── ADR-001-scheduled-infrastructure.md
-│   │   └── ADR-002-fastapi-and-vue-client.md
-│   ├── changelog.md                   Historial de versiones
-│   └── traceability.md                Matriz de trazabilidad
-├── specs/                             Especificaciones de características
-│   └── 001-modernization-and-showcase/
-├── src/nainprospect/                  Backend desacoplado FastAPI
-│   ├── api/routes.py                  Endpoints REST
-│   ├── domain/models.py               Esquemas Pydantic v2
-│   ├── engine/                        Motores de sourcing, compliance y plantillas
-│   └── main.py                        Punto de entrada ASGI (puerto 8106)
-├── tests/                             Suite Pytest (15 tests)
-└── ProspectAI.Client/                 Frontend SPA Vue 3 + TypeScript (puerto 5377)
-    ├── src/components/                Componentes de control, tabla y previsualización
-    ├── src/services/api.ts            Cliente HTTP tipado
-    └── vite.config.ts                 Configuración Vite con puerto 5377
+├── AGENTS.md                          Developer conventions and operational constraints
+├── CLAUDE.md                          Architectural boundaries and compliance rules
+├── SECURITY.md                        Security policy and GDPR isolation guarantees
+├── pytest.ini                         Test configuration with pythonpath
+├── requirements.txt                   Pinned LTS Python dependencies
+├── config.py                          Central configuration and mode detector
+├── pipeline.py                        CLI batch orchestrator
+├── test_pipeline.py                   Console proof-of-concept runner (10 leads)
+├── docs/                              Numbered lifecycle documentation
+├── src/nainprospect/                  Decoupled FastAPI backend
+│   ├── api/routes.py                  REST endpoints
+│   ├── domain/models.py               Pydantic v2 schemas
+│   ├── engine/                        Sourcing, compliance, and template engines
+│   └── main.py                        ASGI application entrypoint (port 8106)
+├── tests/                             Pytest suite (16 tests)
+└── ProspectAI.Client/                 Vue 3 + TypeScript SPA (port 5377)
+    ├── src/components/                Control, table, and preview modal components
+    ├── src/locales/                   Reactive i18n module (es-ES / en-US)
+    ├── src/services/api.ts            Typed HTTP client
+    └── vite.config.ts                 Vite configuration pinned to port 5377
 ```

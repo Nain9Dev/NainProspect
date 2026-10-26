@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { TemplatePreviewResponse } from '../types/contracts'
+import { t } from '../locales/i18n'
 
 const props = defineProps<{
   preview: TemplatePreviewResponse | null
@@ -27,7 +28,7 @@ function copyHtml() {
       <div class="modal-header">
         <div class="header-left">
           <span class="badge badge-indigo">{{ preview.sector }}</span>
-          <h3>Previsualizacion de Outreach</h3>
+          <h3>{{ t('modalTitle') }}</h3>
         </div>
         <button class="close-btn" @click="emit('close')">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor">
@@ -46,29 +47,26 @@ function copyHtml() {
           </svg>
         </div>
         <div class="banner-text">
-          <strong>Compuerta Legal LSSI-CE Art. 21 Activa: Envio Real Bloqueado</strong>
-          <p>
-            El sistema detiene el pipeline en previsualizacion determinista. No se envia ningun correo
-            automaticamente para garantizar el estricto cumplimiento del RGPD (interes legitimo 6.1.f) y LSSI-CE 21.
-          </p>
+          <strong>{{ t('modalBannerTitle') }}</strong>
+          <p>{{ t('modalBannerDesc') }}</p>
         </div>
       </div>
 
       <!-- Email Details -->
       <div class="email-meta">
         <div class="meta-row">
-          <span class="meta-label">Para:</span>
+          <span class="meta-label">{{ t('recipientLabel') }}</span>
           <span class="meta-val font-mono">{{ preview.recipient }}</span>
         </div>
         <div class="meta-row">
-          <span class="meta-label">Asunto:</span>
+          <span class="meta-label">{{ t('subjectLabel') }}</span>
           <strong class="meta-val">{{ preview.subject }}</strong>
         </div>
       </div>
 
       <!-- Live Rendered Frame / Box -->
       <div class="email-preview-box">
-        <div class="preview-badge">PUBLICIDAD</div>
+        <div class="preview-badge">{{ t('adBadge') }}</div>
         <div class="rendered-body" v-html="preview.body_html"></div>
         <div class="rendered-footer" v-html="preview.legal_footer_html"></div>
       </div>
@@ -76,10 +74,10 @@ function copyHtml() {
       <!-- Modal Footer -->
       <div class="modal-footer">
         <button class="btn-secondary" @click="copyHtml">
-          <span>{{ copied ? 'Copiado al portapapeles' : 'Copiar Codigo HTML' }}</span>
+          <span>{{ copied ? t('btnCopied') : t('btnCopyHtml') }}</span>
         </button>
         <button class="btn-primary" @click="emit('close')">
-          <span>Cerrar</span>
+          <span>{{ t('btnClose') }}</span>
         </button>
       </div>
     </div>

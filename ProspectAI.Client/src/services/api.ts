@@ -89,7 +89,7 @@ export async function runPipeline(
     limit: limite,
     forceSimulation,
     lssiGateActive: true,
-    totalProcessed: result.total_procesados,
+    totalProcessed: result.total_leads,
     runtime: useMock ? 'InBrowserMockPipeline' : 'FastApiBackend'
   })
 

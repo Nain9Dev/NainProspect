@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { currentLocale, setLocale, t } from '../locales/i18n'
+
 defineProps<{
   isOnline: boolean
   scrapingMode: string
@@ -19,22 +21,44 @@ defineProps<{
       <div class="titles">
         <div class="title-row">
           <h1>NainProspect</h1>
-          <span class="badge badge-indigo">Gateway B2B</span>
-          <span class="badge badge-rose">Compuerta LSSI-CE</span>
+          <span class="badge badge-indigo">{{ t('gatewayBadge') }}</span>
+          <span class="badge badge-rose">{{ t('lssiBadge') }}</span>
         </div>
-        <p class="subtitle">Sourcing de empresas B2B, enriquecimiento Haiku 4.5 y compuerta legal LSSI-CE 21</p>
+        <p class="subtitle">{{ t('subtitle') }}</p>
       </div>
     </div>
 
     <div class="status-bar">
       <div class="status-pill" :class="{ 'online': isOnline, 'offline': !isOnline }">
         <span class="dot"></span>
-        <span class="text">{{ isOnline ? 'API Conectada (:8106)' : 'Motor Autónomo Client-Side (0,00 €)' }}</span>
+        <span class="text">{{ isOnline ? t('connectedApi') : t('autonomousMotor') }}</span>
       </div>
 
       <div class="mode-tags">
-        <span class="mode-tag" :title="scrapingMode">Scraping: {{ scrapingMode.split(' ')[0] }}</span>
-        <span class="mode-tag" :title="classificationMode">IA: {{ classificationMode.split(' ')[0] }}</span>
+        <span class="mode-tag" :title="scrapingMode">{{ t('scraping') }}: {{ scrapingMode.split(' ')[0] }}</span>
+        <span class="mode-tag" :title="classificationMode">{{ t('ai') }}: {{ classificationMode.split(' ')[0] }}</span>
+      </div>
+
+      <div class="lang-switch-group" role="group" aria-label="Language selector">
+        <button
+          type="button"
+          class="lang-btn"
+          :class="{ active: currentLocale === 'es' }"
+          @click="setLocale('es')"
+          aria-label="Español de España"
+        >
+          ES
+        </button>
+        <span class="lang-divider">|</span>
+        <button
+          type="button"
+          class="lang-btn"
+          :class="{ active: currentLocale === 'en' }"
+          @click="setLocale('en')"
+          aria-label="English"
+        >
+          EN
+        </button>
       </div>
 
       <a
@@ -43,7 +67,7 @@ defineProps<{
         rel="noopener"
         class="docs-link btn-secondary"
       >
-        <span>Docs & Código</span>
+        <span>{{ t('docsAndCode') }}</span>
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor">
           <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" stroke-width="2"/>
           <polyline points="15 3 21 3 21 9" stroke-width="2"/>
@@ -164,5 +188,44 @@ h1 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+.lang-switch-group {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 2px 6px;
+  gap: 4px;
+}
+
+.lang-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.lang-btn:hover {
+  color: var(--text-main, #ffffff);
+}
+
+.lang-btn.active {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.15);
+}
+
+.lang-divider {
+  color: var(--border-subtle);
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  user-select: none;
 }
 </style>
