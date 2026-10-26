@@ -6,6 +6,8 @@ import CostMetricsCard from './components/CostMetricsCard.vue'
 import LeadsTable from './components/LeadsTable.vue'
 import TemplateViewerModal from './components/TemplateViewerModal.vue'
 import ComplianceNotice from './components/ComplianceNotice.vue'
+import ShowcaseHero from './components/ShowcaseHero.vue'
+import { SCENARIO_LIMIT, SCENARIO_QUERY } from './services/scenario'
 
 import type {
   SystemConfigResponse,
@@ -75,6 +77,20 @@ async function handleExecuteRun(payload: { query: string; limit: number; simulat
   }
 }
 
+/** The guided scenario runs the same pipeline as the launcher, so it works with the API or without it. */
+function runScenario(): Promise<void> {
+  return handleExecuteRun({ query: SCENARIO_QUERY, limit: SCENARIO_LIMIT, simulation: true })
+}
+
+/** "Probar mi búsqueda": takes the visitor to the search field of the launcher. */
+function focusOwnSearch() {
+  const field = document.getElementById('query-input')
+  if (!field) return
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  field.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' })
+  field.focus({ preventScroll: true })
+}
+
 async function handlePreviewLead(lead: EnrichedLead) {
   selectedLead.value = lead
   try {
@@ -103,6 +119,13 @@ onMounted(() => {
       :is-online="isOnline"
       :scraping-mode="config?.scraping_mode ?? 'SIMULADO'"
       :classification-mode="config?.classification_mode ?? 'SIMULADO'"
+    />
+
+    <ShowcaseHero
+      :leads="leads"
+      :run-scenario="runScenario"
+      @view-email="handlePreviewLead"
+      @own-search="focusOwnSearch"
     />
 
     <main class="main-grid">

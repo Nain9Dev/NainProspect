@@ -167,6 +167,12 @@ body {
   box-shadow: 0 0 0 2px var(--cyan-glow);
 }
 
+/* The NainDev suite bar is a hosted element fixed to the top (38 px). Reserve its height only once
+   it is defined, so a blocked script leaves no empty strip and the header is never covered. */
+:root:has(nain-ecosystem-bar:defined) body {
+  padding-top: 38px;
+}
+
 /* App Layout */
 .app-container {
   max-width: 1400px;
@@ -181,8 +187,20 @@ body {
   margin-top: 24px;
 }
 
+/* Grid items default to min-width: auto, so a wide table or a row of chips made the single column
+   as wide as its content and the page scrolled sideways on a phone. */
+.main-grid > * {
+  min-width: 0;
+}
+
 @media (max-width: 1024px) {
   .main-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 40rem) {
+  .app-container {
+    padding: 16px 12px;
   }
 }
