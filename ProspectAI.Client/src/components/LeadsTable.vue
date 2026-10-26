@@ -216,6 +216,7 @@ function getPriorityBadgeClass(prio: number): string {
 
 .filters {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
 }

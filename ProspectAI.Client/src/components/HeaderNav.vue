@@ -228,4 +228,28 @@ h1 {
   font-family: var(--font-mono);
   user-select: none;
 }
+
+/*
+ * On a phone the brand, the badges and the status row used to sit in one line and push the
+ * page to about 950 px wide, so the first screen scrolled sideways. They stack and wrap
+ * instead (specs/002-showcase-header, SH-009).
+ */
+@media (max-width: 62rem) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .title-row,
+  .status-bar,
+  .mode-tags {
+    flex-wrap: wrap;
+  }
+
+  .status-pill {
+    max-width: 100%;
+  }
+}
 </style>
