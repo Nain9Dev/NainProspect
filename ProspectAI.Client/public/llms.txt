@@ -1,0 +1,7 @@
+# NainProspect
+
+> B2B prospecting gateway that sources company data, classifies it with AI and drafts compliant outreach emails; real sending is blocked by a legal gate (GDPR 6.1.f, LSSI-CE Art. 21).
+
+- [Live demo](https://prospect.naindev.com/): runs the whole pipeline on synthetic data, in Spanish and English
+- [Source code](https://github.com/Nain9Dev/NainProspect): FastAPI + Pydantic v2 backend, Vue 3 + TypeScript client, architecture tests
+- [NainDev](https://www.naindev.com/): the author's main site and project ecosystem
