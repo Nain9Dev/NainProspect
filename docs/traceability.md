@@ -11,3 +11,4 @@
 | SH-001, SH-002, SH-005, SH-006 | Showcase header, honest framing, own search, Spanish and English | specs/002-showcase-header | `ShowcaseHero.vue`, `locales/i18n.ts` | Browser pass at 1280, 390 and 375 px in both languages |
 | SH-003, SH-004 | Scenario figures from the run; best lead for the email | specs/002-showcase-header | `services/scenario.ts` | `tests/scenario.test.ts` (9 tests) |
 | SH-007, SH-008, SH-009 | Reduced motion, ordered stages with a live region, no horizontal scroll | specs/002-showcase-header | `ShowcaseHero.vue`, `HeaderNav.vue`, `style.css` | `scenarioDelays(true)` test; overflow measured under phone emulation (0 px over) |
+| SEO-001 to SEO-006 | Canonical, description, social cards, JSON-LD, robots/sitemap/llms.txt, author link | specs/003-seo-baseline | `ProspectAI.Client/index.html`, `ProspectAI.Client/public/` | `tests/test_seo_baseline.py` (9 tests) |
