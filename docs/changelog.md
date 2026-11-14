@@ -4,6 +4,7 @@ All notable changes to this project are documented in this file following Keep a
 
 ## [Unreleased]
 ### Added
+- Installable site (`specs/next-pwa-install`): web app manifest, install icons and iOS head tags so the demo installs from Android Chrome and iOS Safari. No service worker or offline cache. Covered by `tests/test_pwa_install.py`.
 - Discoverability baseline (`specs/003-seo-baseline`): description, canonical, Open Graph, Twitter card, author link and `SoftwareApplication` JSON-LD in the static `index.html`, plus `robots.txt`, `sitemap.xml` and `llms.txt` at the site root, covered by `tests/test_seo_baseline.py`.
 - Showcase header and guided scenario in the client (`specs/002-showcase-header`): what the product does, in Spanish and English, and a button that runs the whole pipeline on synthetic data stage by stage (capture, classification, compliance, outreach). Every figure is computed from the leads the run returned; at the end it offers the generated email of the best qualified lead. Real sending stays blocked and the header says so.
 - `npm test` in `ProspectAI.Client` (Node test runner, no new dependency) covering the scenario logic.
